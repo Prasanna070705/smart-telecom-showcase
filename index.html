@@ -49,7 +49,7 @@
           services without letting churn rise; an integer program picks which at-risk customers to call with which of six retention
           offers. A sweep then shows how retention spending frees room to raise prices.</p>
         <div class="btns">
-          <a class="btn primary" href="#demo">Watch the 1-minute demo</a>
+          <a class="btn primary" href="#demo">Watch the 45-second demo</a>
           <a class="btn ghost" id="live" href="#" hidden target="_blank" rel="noopener">Try it live</a>
           <span class="faint">Source code in a private repository, available on request.</span>
         </div>
@@ -58,7 +58,7 @@
         <div class="grid g4" style="margin-top: 40px">
           <div class="card kpi reveal"><div class="label">Customers</div><div class="value">7,043</div><div class="note">26.5% left during their recorded tenure</div></div>
           <div class="card kpi reveal"><div class="label">Re-pricing</div><div class="value tone-indigo">+7.6%</div><div class="note">modelled lifetime profit, churn held at today's level</div></div>
-          <div class="card kpi reveal"><div class="label">Retention campaign</div><div class="value tone-emerald">$182,949</div><div class="note">expected value of 901 calls at 30% acceptance</div></div>
+          <div class="card kpi reveal"><div class="label">Retention campaign</div><div class="value tone-emerald">$149,869</div><div class="note">expected value of calling 740 current customers at 30% acceptance</div></div>
           <div class="card kpi reveal"><div class="label">Verification</div><div class="value tone-amber">76</div><div class="note">automated checks re-derive every number from the raw file</div></div>
         </div>
       </div>
@@ -75,8 +75,11 @@
 
     <section id="new" data-tone="emerald">
       <div class="wrap">
-        <p class="eyebrow">What's new · v1.2</p>
+        <p class="eyebrow">What's new · v1.2 and v1.3</p>
         <h2>Easier to read, honest about slow servers, runs anywhere</h2>
+        <p class="muted" style="max-width: 72ch"><b>v1.3:</b> the call list now includes only customers still with the company. A hand check of
+          the top customer showed the list had included people the data says had already left (557 of 901 calls). The churn model still
+          learns from everyone; only who can be called changed. The campaign is now worth an expected $149,869 from 740 calls.</p>
         <div class="grid g2" style="margin-top: 24px">
           <div class="card reveal"><h3>An Index for every term</h3>
             <p class="muted">A new page explains every term, formula and method in plain language, with the agent time and cost of each offer read
@@ -104,9 +107,9 @@
               monthly churn risk rises with their bill.</p>
             <ul class="ticks"><li>Each price within ±25%; no bill moves more than 15%</li><li>Fibre stays $10 above DSL</li><li>Average churn may not rise above today's</li><li>SciPy SLSQP from 8 starting points; all agree</li></ul></div>
           <div class="card reveal"><span class="tag">Engine 2 · binary integer program</span><h3>Retention optimizer</h3>
-            <p class="muted">For each of 1,651 customers with a monthly churn risk of 3% or more, at most one of six offers: contracts, free
+            <p class="muted">For each of the 740 current customers with a monthly churn risk of 3% or more, at most one of six offers: contracts, free
               services, an autopay switch.</p>
-            <ul class="ticks"><li>9,124 eligible customer-offer pairs</li><li>Budget, agent hours and a cap per offer</li><li>SciPy milp (HiGHS); within 0.01% of the LP bound</li><li>Beats the best of three greedy rankings by 5.16%</li></ul></div>
+            <ul class="ticks"><li>Only customers still with the company: 740 candidates, 3,952 customer-offer pairs</li><li>Budget, agent hours and a cap per offer</li><li>SciPy milp (HiGHS); within 0.01% of the LP bound</li><li>Beats the best of three greedy rankings by 8.25%</li></ul></div>
           <div class="card reveal"><span class="tag">Coupling</span><h3>Retention buys pricing room</h3>
             <p class="muted">Calling at-risk customers lowers their churn, which leaves room under Engine 1's churn ceiling. The sweep runs
               Engine 2 at each budget, then Engine 1 on the lower churn.</p>
@@ -138,9 +141,9 @@
             <p class="muted">The pattern is identical for price sensitivity anywhere from 0.4 to 1.5; only the size of the fibre cut moves
               (−17.6% to −18.3%). Each extra 1% of churn the business would accept is worth $164,816.</p></div>
           <div class="card reveal"><h3>Who to call</h3>
-            <p class="muted">$30,000, 500 agent hours, at most 350 customers per offer: 901 customers called (350 autopay, 349 one-year,
-              198 two-year, 4 online security) for an expected $182,949.</p>
-            <p class="muted">Re-solved with contract effects cut to half or a quarter, or acceptance at 15% or 50%: about 80-95% of the same
+            <p class="muted">$30,000, 500 agent hours, at most 350 customers per offer: all 740 current at-risk customers called (350 two-year contracts,
+              350 autopay, 40 two-year + tech support) for an expected $149,869. Customers the data says already left are not called.</p>
+            <p class="muted">Re-solved with contract effects cut to half or a quarter, or acceptance at 15% or 50%: 94-100% of the same
               customers are still called. <em>Which</em> offer they get is less stable, so the call list is the firm output.</p></div>
         </div>
         <div class="card reveal" style="margin-top: 16px"><h3>Retention spend vs pricing room</h3>
@@ -148,14 +151,14 @@
             <thead><tr><th>Retention budget</th><th class="r">Offer value</th><th class="r">Net gain</th><th class="r">Fibre price</th></tr></thead>
             <tbody>
               <tr><td>$0</td><td class="r">$0</td><td class="r"><b>$1.29M</b></td><td class="r">−17.9%</td></tr>
-              <tr><td>$15,000</td><td class="r">$96,719</td><td class="r"><b>$2.32M</b></td><td class="r">+0.4%</td></tr>
-              <tr><td>$30,000</td><td class="r">$182,949</td><td class="r"><b>$3.15M</b></td><td class="r">+15.0%</td></tr>
-              <tr><td>$60,000</td><td class="r">$322,279</td><td class="r"><b>$3.28M</b></td><td class="r">+15.0%</td></tr>
-              <tr><td>$90,000</td><td class="r">$372,420</td><td class="r"><b>$3.30M</b></td><td class="r">+15.0%</td></tr>
+              <tr><td>$15,000</td><td class="r">$89,635</td><td class="r"><b>$2.27M</b></td><td class="r">−0.5%</td></tr>
+              <tr><td>$30,000</td><td class="r">$149,869</td><td class="r"><b>$2.94M</b></td><td class="r">+11.0%</td></tr>
+              <tr><td>$60,000</td><td class="r">$168,068</td><td class="r"><b>$2.99M</b></td><td class="r">+12.3%</td></tr>
+              <tr><td>$90,000</td><td class="r">$168,068</td><td class="r"><b>$2.99M</b></td><td class="r">+12.3%</td></tr>
             </tbody>
           </table>
           <p class="faint" style="margin-top: 12px">Net gain is modelled lifetime profit after retention spend, against today's $17.01M. Most of
-            the gain comes from the first $30,000; from there every price is at the 15% limit and extra spend only adds offer value.</p></div>
+            the gain comes from the first $30,000; beyond about $56,000 nothing more can be spent, because every current at-risk customer is already called.</p></div>
       </div>
     </section>
 
@@ -168,7 +171,7 @@
             <thead><tr><th>Method</th><th>Where it is used</th></tr></thead>
             <tbody>
               <tr><td><b>Nonlinear programming</b> (managerial economics)</td><td>Engine 1: pricing where churn rises with the bill through a price elasticity η; solved with SLSQP from eight starting points</td></tr>
-              <tr><td><b>Integer programming</b></td><td>Engine 2: 9,124 yes/no call decisions, branch and bound (HiGHS) to a 0.1% optimality gap</td></tr>
+              <tr><td><b>Integer programming</b></td><td>Engine 2: 3,952 yes/no call decisions, branch and bound (HiGHS) to a 0.1% optimality gap</td></tr>
               <tr><td><b>Linear programming</b></td><td>Engine 2's linear relaxation gives the upper bound the call list is measured against; lifetime value is a discounting model</td></tr>
               <tr><td><b>Assignment model</b> with side constraints</td><td>Customers assigned to offers: at most one each, a capacity per offer, plus the budget and agent hours</td></tr>
               <tr><td><b>Knapsack and capital budgeting</b></td><td>The budget limit is a knapsack constraint; choosing calls is capital budgeting over thousands of small projects</td></tr>
@@ -176,8 +179,8 @@
             </tbody>
           </table>
         </div>
-        <p class="faint" style="margin-top: 12px">The budget sweep reads like a falling shadow price: each extra retention dollar is worth about $69 of net gain up to
-          $15,000, $54 up to $30,000, then $4 and under $1, as money stops being the scarce resource.</p>
+        <p class="faint" style="margin-top: 12px">The budget sweep reads like a falling shadow price: each extra retention dollar is worth about $65 of net gain up to
+          $15,000, $45 up to $30,000, then under $2, and nothing beyond about $56,000, when every current at-risk customer is already called.</p>
       </div>
     </section>
 
@@ -190,7 +193,7 @@
             tested from 0.4 to 1.5, not an estimate.</li>
           <li><b>No measured offer effects.</b> Customers on two-year contracts churn far less, but they chose those contracts. The model's
             ratios are associations, so the app re-solves with them cut to half and a quarter.</li>
-          <li><b>Expected values, not forecasts.</b> $182,949 assumes 30% of customers accept (a literature prior) and that an offer's effect
+          <li><b>Expected values, not forecasts.</b> $149,869 assumes 30% of customers accept (a literature prior) and that an offer's effect
             lasts its term.</li>
           <li><b>The churn ceiling drives the price answer,</b> not the shape of the profit curve.</li>
           <li><b>Greedy is not as good.</b> Ranking customers by score is 4-6% worse than solving the integer program.</li>
