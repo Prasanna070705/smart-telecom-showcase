@@ -75,11 +75,13 @@
 
     <section id="new" data-tone="emerald">
       <div class="wrap">
-        <p class="eyebrow">What's new · v1.2 and v1.3</p>
+        <p class="eyebrow">What's new · v1.2 to v1.3.1</p>
         <h2>Easier to read, honest about slow servers, runs anywhere</h2>
         <p class="muted" style="max-width: 72ch"><b>v1.3:</b> the call list now includes only customers still with the company. A hand check of
           the top customer showed the list had included people the data says had already left (557 of 901 calls). The churn model still
           learns from everyone; only who can be called changed. The campaign is now worth an expected $149,869 from 740 calls.</p>
+        <p class="muted" style="max-width: 72ch"><b>v1.3.1:</b> prices are still set for the whole customer base. Engine 1 keeps pricing over all
+          7,043 customers, because a price list applies to everyone; only the call list is limited to current customers. No results changed.</p>
         <div class="grid g2" style="margin-top: 24px">
           <div class="card reveal"><h3>An Index for every term</h3>
             <p class="muted">A new page explains every term, formula and method in plain language, with the agent time and cost of each offer read
@@ -105,7 +107,7 @@
           <div class="card reveal"><span class="tag">Engine 1 · nonlinear program</span><h3>Price optimizer</h3>
             <p class="muted">Sets one price for each of ten services to maximise customer lifetime profit, where, in the model, each customer's
               monthly churn risk rises with their bill.</p>
-            <ul class="ticks"><li>Each price within ±25%; no bill moves more than 15%</li><li>Fibre stays $10 above DSL</li><li>Average churn may not rise above today's</li><li>SciPy SLSQP from 8 starting points; all agree</li></ul></div>
+            <ul class="ticks"><li>Each price within ±25%; no bill moves more than 15%</li><li>Fibre stays $10 above DSL</li><li>Average churn may not rise above today's</li><li>SciPy SLSQP from 8 starting points; all agree</li><li>Prices for all 7,043 customers; only the call list is limited to current ones</li></ul></div>
           <div class="card reveal"><span class="tag">Engine 2 · binary integer program</span><h3>Retention optimizer</h3>
             <p class="muted">For each of the 740 current customers with a monthly churn risk of 3% or more, at most one of six offers: contracts, free
               services, an autopay switch.</p>
@@ -217,7 +219,7 @@
   </main>
 
   <footer>
-    <div class="wrap">Smart Telecom Command Center · Operations Research · Data: IBM Telco Customer Churn sample dataset (7,043 customers).</div>
+    <div class="wrap">Smart Telecom Command Center · Operations Research · version 1.3.1 · Data: IBM Telco Customer Churn sample dataset (7,043 customers).</div>
   </footer>
 
   <script src="assets/site.js"></script>
