@@ -27,7 +27,7 @@
         <span><small>Smart Telecom</small><b>Command Center</b></span>
       </a>
       <nav class="links" aria-label="Sections">
-        <a href="#demo">Demo</a><a href="#how">How it works</a><a href="#screens">Screens</a><a href="#results">Results</a><a href="#honesty">Limits</a><a href="#stack">Built with</a>
+        <a href="#demo">Demo</a><a href="#new">What's new</a><a href="#how">How it works</a><a href="#screens">Screens</a><a href="#results">Results</a><a href="#methods">OR methods</a><a href="#honesty">Limits</a><a href="#stack">Built with</a>
       </nav>
       <div class="right">
       <nav class="pagetabs" aria-label="Pages"><a href="index.html" aria-current="page">Project</a><a href="data.html">Your data</a></nav>
@@ -49,7 +49,7 @@
           services without letting churn rise; an integer program picks which at-risk customers to call with which of six retention
           offers. A sweep then shows how retention spending frees room to raise prices.</p>
         <div class="btns">
-          <a class="btn primary" href="#demo">Watch the 40-second demo</a>
+          <a class="btn primary" href="#demo">Watch the 1-minute demo</a>
           <a class="btn ghost" id="live" href="#" hidden target="_blank" rel="noopener">Try it live</a>
           <span class="faint">Source code in a private repository, available on request.</span>
         </div>
@@ -68,8 +68,29 @@
       <div class="wrap">
         <p class="eyebrow">Demo</p>
         <h2>The app, end to end</h2>
-        <p class="muted">Engine 1 and its sensitivity check, Engine 2 and its robustness check, the coupling sweep, then light mode. Recorded from the running app.</p>
+        <p class="muted">Engine 1 and its sensitivity check, Engine 2 and its robustness check with live progress, the coupling sweep, the Index of terms, then light mode. Recorded from the running app.</p>
         <div class="video reveal"><video controls muted playsinline preload="metadata" poster="media/demo-poster.jpg" aria-label="Demo of the Smart Telecom Command Center"><source src="media/demo.mp4" type="video/mp4" /></video></div>
+      </div>
+    </section>
+
+    <section id="new" data-tone="emerald">
+      <div class="wrap">
+        <p class="eyebrow">What's new · v1.2</p>
+        <h2>Easier to read, honest about slow servers, runs anywhere</h2>
+        <div class="grid g2" style="margin-top: 24px">
+          <div class="card reveal"><h3>An Index for every term</h3>
+            <p class="muted">A new page explains every term, formula and method in plain language, with the agent time and cost of each offer read
+              straight from the engine. A "?" beside any label jumps to its entry. The retention budget is now typed as an exact amount.</p></div>
+          <div class="card reveal"><h3>Honest about slow solves</h3>
+            <p class="muted">If the solver stops at its time limit, the page says so instead of presenting a cut-short answer as the best. Long runs
+              show what they are solving and for how long, Engine 2 warns when a background run shares the server, and a run lost to a restart says so.</p></div>
+          <div class="card reveal"><h3>Repeat runs are instant</h3>
+            <p class="muted">Asking for a sweep or robustness check with the same settings as a finished one returns it at once, and an identical run
+              that is already going is joined instead of started twice, which matters on a small shared server.</p></div>
+          <div class="card reveal"><h3>Runs anywhere</h3>
+            <p class="muted">One Docker image holds the whole app, it is live on a free cloud server, and every change is tested automatically on
+              Windows and on Linux. Light and dark themes, an animated logo and a slow "signal network" background round it off.</p></div>
+        </div>
       </div>
     </section>
 
@@ -138,6 +159,28 @@
       </div>
     </section>
 
+    <section id="methods" data-tone="indigo">
+      <div class="wrap">
+        <p class="eyebrow">Operations Research methods</p>
+        <h2>The models behind the answers</h2>
+        <div class="card reveal scroll" style="margin-top: 24px">
+          <table aria-label="Operations Research methods used">
+            <thead><tr><th>Method</th><th>Where it is used</th></tr></thead>
+            <tbody>
+              <tr><td><b>Nonlinear programming</b> (managerial economics)</td><td>Engine 1: pricing where churn rises with the bill through a price elasticity η; solved with SLSQP from eight starting points</td></tr>
+              <tr><td><b>Integer programming</b></td><td>Engine 2: 9,124 yes/no call decisions, branch and bound (HiGHS) to a 0.1% optimality gap</td></tr>
+              <tr><td><b>Linear programming</b></td><td>Engine 2's linear relaxation gives the upper bound the call list is measured against; lifetime value is a discounting model</td></tr>
+              <tr><td><b>Assignment model</b> with side constraints</td><td>Customers assigned to offers: at most one each, a capacity per offer, plus the budget and agent hours</td></tr>
+              <tr><td><b>Knapsack and capital budgeting</b></td><td>The budget limit is a knapsack constraint; choosing calls is capital budgeting over thousands of small projects</td></tr>
+              <tr><td><b>Sensitivity analysis</b></td><td>Shadow price of the churn ceiling ($164,816 per 1%); binding constraints; re-solves across price sensitivity, contract effects, acceptance and budget</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="faint" style="margin-top: 12px">The budget sweep reads like a falling shadow price: each extra retention dollar is worth about $69 of net gain up to
+          $15,000, $54 up to $30,000, then $4 and under $1, as money stops being the scarce resource.</p>
+      </div>
+    </section>
+
     <section id="honesty" data-tone="rose">
       <div class="wrap">
         <p class="eyebrow">Limits</p>
@@ -163,8 +206,8 @@
         <h2>Stack and testing</h2>
         <div class="grid g3" style="margin-top: 24px">
           <div class="card reveal"><h3>Modelling</h3><ul class="ticks"><li>Python: NumPy, pandas, scikit-learn</li><li>SciPy SLSQP (nonlinear) and milp / HiGHS (integer)</li><li>76 checks re-derive every number from the raw CSV</li></ul></div>
-          <div class="card reveal"><h3>App</h3><ul class="ticks"><li>Node.js API with no npm dependencies</li><li>Two long-lived Python workers; slow solves run as cancellable background jobs</li><li>React 19, Tailwind CSS 4, Vite 8; light and dark themes</li></ul></div>
-          <div class="card reveal"><h3>Testing</h3><ul class="ticks"><li>API test against reference numbers</li><li>Browser test (Playwright) in Chromium and WebKit</li><li>Every test on Windows in GitHub Actions</li></ul></div>
+          <div class="card reveal"><h3>App</h3><ul class="ticks"><li>Node.js API with no npm dependencies</li><li>Two long-lived Python workers; slow solves run as cancellable background jobs, reused when repeated</li><li>React 19, Tailwind CSS 4, Vite 8; light and dark themes</li><li>One Docker image; live on Render</li></ul></div>
+          <div class="card reveal"><h3>Testing</h3><ul class="ticks"><li>API test against reference numbers</li><li>Browser test (Playwright, 25 steps) in Chromium and WebKit</li><li>Every test on Windows, and the Docker image on Linux, in GitHub Actions</li></ul></div>
         </div>
       </div>
     </section>
@@ -186,7 +229,7 @@
         ['02-pricing', 'Pricing', 'Engine 1: the optimal price list, what limits each price, and the sensitivity check.'],
         ['03-retention', 'Retention', 'Engine 2: value preserved, the offer mix, the robustness check, and the call list.'],
         ['04-coupling', 'Coupling', 'Net gain against retention budget, solved as a background job.'],
-        ['05-checks', 'Data & checks', 'Verification status and the assumptions behind every number.']];
+        ['05-index', 'Index', 'Every term, formula and method in plain language, and the agent time and cost per offer.']];
       const tabs = document.querySelector('.tabs'), panel = document.querySelector('.shot');
       const show = (i) => {
         const [f, name, what] = pages[i];
