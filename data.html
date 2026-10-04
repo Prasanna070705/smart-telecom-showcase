@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your data · Smart Telecom Command Center</title>
+  <meta name="description" content="The data format the Smart Telecom Command Center would accept, the columns it needs, and how your own data would change each engine's output." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <script>
+    try { var t = localStorage.getItem('theme'); var d = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.classList.toggle('dark', d); document.documentElement.style.colorScheme = d ? 'dark' : 'light' } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="assets/site.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <canvas id="ambient" aria-hidden="true"></canvas>
+
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="index.html" aria-label="Smart Telecom Command Center, project page">
+        <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" id="logo"></svg>
+        <span><small>Smart Telecom</small><b>Command Center</b></span>
+      </a>
+      <nav class="links" aria-label="Sections">
+        <a href="#layouts">Layouts</a><a href="#columns">Columns</a><a href="#optional">Optional data</a><a href="#changes">What changes</a><a href="#checks">Checks</a>
+      </nav>
+      <div class="right">
+        <nav class="pagetabs" aria-label="Pages"><a href="index.html">Project</a><a href="data.html" aria-current="page">Your data</a></nav>
+        <div class="toggle" role="group" aria-label="Colour theme">
+          <button type="button" data-theme="light" title="Light theme" aria-label="Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+          <button type="button" data-theme="system" title="System theme" aria-label="System"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+          <button type="button" data-theme="dark" title="Dark theme" aria-label="Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="top" data-tone="emerald">
+      <div class="wrap">
+        <span class="badge">Planned · not in the app yet</span>
+        <h1>Running it on your own customers.</h1>
+        <p class="lead">Today the engines run on one fixed file: IBM's Telco sample, a single snapshot of 7,043 customers. This page sets out the
+          format a customer file would need for the app to run on it instead, including month-by-month history, and what changes in
+          each engine's output when it does.</p>
+        <div class="btns">
+          <a class="btn primary" href="templates/customers-snapshot.csv" download>Snapshot template (.csv)</a>
+          <a class="btn ghost" href="templates/customers-monthly.csv" download>Monthly template (.csv)</a>
+          <span class="faint">Both open in Excel. Excel workbooks (.xlsx) would be accepted too.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="layouts" data-tone="emerald">
+      <div class="wrap">
+        <p class="eyebrow">Two layouts</p>
+        <h2>One row per customer, or one row per customer per month</h2>
+        <div class="grid g2" style="margin-top: 24px">
+          <div class="card reveal"><span class="tag">Layout A · snapshot</span><h3>One row per customer</h3>
+            <p class="muted">The customer as they are today: how long they have been a customer, whether they have left, and their current
+              plan. This is the layout of the IBM file, so the app's results on it are the reference.</p>
+            <ul class="ticks"><li>Simplest to export from a billing or CRM system</li><li>Monthly churn risk is reconstructed from tenure</li><li>Cannot show customers who changed plan, or prices that changed</li></ul></div>
+          <div class="card reveal"><span class="tag">Layout B · monthly history</span><h3>One row per customer per month</h3>
+            <p class="muted">Every month each customer was active: what they had, what they paid, and whether they left that month. The
+              better choice when the history exists.</p>
+            <ul class="ticks"><li>Monthly churn risk is fitted directly on customer-months</li><li>Follows customers who change services, contract or payment</li><li>If list prices changed during the history, price sensitivity can be estimated (see below)</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="columns" data-tone="indigo">
+      <div class="wrap">
+        <p class="eyebrow">Required columns</p>
+        <h2>The 19 fields the engines read</h2>
+        <p class="muted">Your column names can differ: on upload you would match each of your columns to one of these fields. Yes/no
+          fields accept yes/no, true/false or 1/0.</p>
+        <div class="card reveal scroll" style="margin-top: 20px">
+          <table aria-label="Required columns">
+            <thead><tr><th>Field</th><th>Allowed values</th><th>Used by</th></tr></thead>
+            <tbody>
+              <tr><td><code>customer_id</code></td><td>Text, unique per customer</td><td>Everything (joins the rows)</td></tr>
+              <tr><td><code>tenure_months</code> <span class="faint">(A only)</span></td><td>Whole number, 0 or more</td><td>Churn model: months at risk</td></tr>
+              <tr><td><code>churned</code> <span class="faint">(A only)</span></td><td>Yes / no: left during their tenure</td><td>Churn model</td></tr>
+              <tr><td><code>month</code> <span class="faint">(B only)</span></td><td>Year and month, e.g. 2025-03</td><td>Churn model: one row = one month at risk</td></tr>
+              <tr><td><code>churned_this_month</code> <span class="faint">(B only)</span></td><td>Yes on the month they left, otherwise no</td><td>Churn model</td></tr>
+              <tr><td><code>monthly_charge</code></td><td>Number: the bill (B: that month's bill)</td><td>Price recovery, customer value in Engines 1 and 2</td></tr>
+              <tr><td><code>contract</code></td><td>month-to-month / one-year / two-year</td><td>Churn model; Engine 2 contract offers and who qualifies</td></tr>
+              <tr><td><code>payment_method</code></td><td>electronic check / mailed check / bank transfer (automatic) / credit card (automatic)</td><td>Churn model; Engine 2 autopay offer</td></tr>
+              <tr><td><code>internet_service</code></td><td>none / DSL / fibre</td><td>Prices, churn model, fibre-above-DSL rule</td></tr>
+              <tr><td><code>phone_service</code>, <code>multiple_lines</code></td><td>Yes / no</td><td>Prices, churn model</td></tr>
+              <tr><td><code>online_security</code>, <code>tech_support</code></td><td>Yes / no</td><td>Prices, churn model; Engine 2 free-service offers</td></tr>
+              <tr><td><code>online_backup</code>, <code>device_protection</code>, <code>streaming_tv</code>, <code>streaming_movies</code></td><td>Yes / no</td><td>Prices, churn model</td></tr>
+              <tr><td><code>paperless_billing</code>, <code>senior_citizen</code>, <code>partner</code>, <code>dependents</code></td><td>Yes / no</td><td>Churn model (they explain risk; not priced)</td></tr>
+            </tbody>
+          </table>
+          <p class="faint" style="margin-top: 12px">Optional: <code>total_charges</code> (used only to check the bills add up). Gender is not used.
+            In layout B the plan, payment and billing fields are as of that month, so a change shows up in the month it happened.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="optional" data-tone="indigo">
+      <div class="wrap">
+        <p class="eyebrow">Optional extra sheets</p>
+        <h2>Data that replaces an assumption with a measurement</h2>
+        <p class="muted">Three of the app's inputs are assumptions today, because the IBM file cannot measure them. Each extra sheet would
+          let the app estimate one of them from your data instead.</p>
+        <div class="grid g3" style="margin-top: 24px">
+          <div class="card reveal"><span class="tag">prices</span><h3>List prices by month</h3>
+            <p class="muted"><code>month</code>, <code>service</code>, <code>list_price</code></p>
+            <ul class="ticks"><li>Prices are read directly instead of recovered from the bills</li><li>If prices changed during the history, price sensitivity is <b>estimated</b>, with a range</li></ul></div>
+          <div class="card reveal"><span class="tag">offers</span><h3>Retention offers made</h3>
+            <p class="muted"><code>customer_id</code>, <code>month</code>, <code>offer</code>, <code>accepted</code></p>
+            <ul class="ticks"><li>Acceptance rate measured per offer instead of the 30% prior</li><li>Offer effects estimated against similar customers who were not offered, most reliably if offers were assigned at random</li></ul></div>
+          <div class="card reveal"><span class="tag">costs</span><h3>Unit cost per service</h3>
+            <p class="muted"><code>service</code>, <code>monthly_unit_cost</code></p>
+            <ul class="ticks"><li>A margin per service instead of one 70% margin for everything</li><li>Engine 1 then trades off services by each service's own margin</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="changes" data-tone="amber">
+      <div class="wrap">
+        <p class="eyebrow">How new data changes the outputs</p>
+        <h2>What moves, engine by engine</h2>
+        <div class="card reveal scroll" style="margin-top: 24px">
+          <table aria-label="Inputs today and with your data">
+            <thead><tr><th>Input</th><th>Today (IBM file)</th><th>With your data</th></tr></thead>
+            <tbody>
+              <tr><td>Service prices</td><td>Recovered from the bills (R² 0.9988)</td><td>Recovered from your bills, or read from the <code>prices</code> sheet</td></tr>
+              <tr><td>Monthly churn risk</td><td>Reconstructed from tenure</td><td>Fitted on your customers (layout B: directly on customer-months)</td></tr>
+              <tr><td>Price sensitivity</td><td>Scenario input, 0.4-1.5</td><td>Still a scenario input, unless the <code>prices</code> sheet shows price changes: then an estimate with a range</td></tr>
+              <tr><td>Offer acceptance</td><td>30% (literature prior)</td><td>Measured from the <code>offers</code> sheet</td></tr>
+              <tr><td>Offer effects</td><td>Model associations, stress-tested at ×0.5 and ×0.25</td><td>Estimated from the <code>offers</code> sheet, where offers were made</td></tr>
+              <tr><td>Margin</td><td>One 70% margin</td><td>Per service, from the <code>costs</code> sheet</td></tr>
+              <tr><td>Checks</td><td>76 checks against known IBM figures</td><td>Data-quality checks and how well predicted churn matches actual churn</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid g2" style="margin-top: 16px">
+          <div class="card reveal"><span class="tag">Engine 1 · prices</span><h3>A different price list, possibly a different shape</h3>
+            <ul class="ticks">
+              <li>The starting point is your current prices and your current average churn, which becomes the churn ceiling.</li>
+              <li>The pattern on the IBM data (add-ons +25%, fibre −17.9%) is a result for those customers, not a rule: which price gets cut depends on your customers' services and churn.</li>
+              <li>With an estimated price sensitivity, the result is shown at the estimate and across its range, instead of across 0.4-1.5.</li>
+              <li>The value of 1% more churn room is recomputed for your customer base.</li></ul></div>
+          <div class="card reveal"><span class="tag">Engine 2 · calls</span><h3>A different call list and offer mix</h3>
+            <ul class="ticks">
+              <li>Candidates are your customers with a monthly churn risk of 3% or more, so the list's size follows your churn level.</li>
+              <li>Who qualifies for which offer follows your contracts, services and payment methods.</li>
+              <li>With measured acceptance and offer effects, the robustness check stresses those estimates' ranges instead of the fixed ×0.5 / ×0.25 and 15% / 50% cases.</li>
+              <li>Expected value scales with your bills and margins.</li></ul></div>
+          <div class="card reveal"><span class="tag">Coupling</span><h3>A different budget curve</h3>
+            <ul class="ticks">
+              <li>Re-run on your data, the sweep shows where retention spend stops freeing pricing room for your customers.</li>
+              <li>The IBM curve flattens after about $30,000; yours will bend where your churn ceiling stops binding.</li></ul></div>
+          <div class="card reveal"><span class="tag">Unchanged</span><h3>What stays the same</h3>
+            <ul class="ticks">
+              <li>The two optimisation models and their solvers.</li>
+              <li>The rules: price bounds, bill-shock cap, churn ceiling, budget, hours and caps (all still adjustable).</li>
+              <li>The pages, the shared settings and the background jobs.</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checks" data-tone="rose">
+      <div class="wrap">
+        <p class="eyebrow">Before the engines run</p>
+        <h2>Checks a file would have to pass</h2>
+        <div class="grid g2" style="margin-top: 24px">
+          <div class="card reveal"><h3>Every file</h3><ul class="ticks">
+            <li>Every required field is matched to a column</li><li>No duplicate customers (layout B: no duplicate customer-months)</li>
+            <li>Values are within the allowed lists; numbers are numbers</li><li>Bills are explained by the services held (a warning, not an error, if the fit is poor)</li>
+            <li>A report lists every row that was skipped and why</li></ul></div>
+          <div class="card reveal"><h3>Monthly history (layout B)</h3><ul class="ticks">
+            <li>Months run without gaps from a customer's first month to their last</li><li><code>churned_this_month</code> is yes at most once, on the last row</li>
+            <li>Enough customers leave for the churn model to be fitted (a minimum number of churn events)</li><li>Price sensitivity is estimated only if list prices actually changed</li></ul></div>
+        </div>
+        <div class="card reveal" style="margin-top: 16px"><h3>Your customers' data</h3>
+          <p class="muted">Customer files are personal data. The intended design processes an upload in memory for that session and never
+            stores it. On a public demo server, uploads would be switched off; running the app locally or in its Docker container keeps
+            the data on your own machine.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Smart Telecom Command Center · Operations Research · <a href="index.html">Back to the project</a></div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>

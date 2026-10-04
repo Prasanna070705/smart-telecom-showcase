@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Telecom Command Center</title>
+  <meta name="description" content="Two optimisation engines on IBM's Telco churn data: a nonlinear program that sets service prices under a churn ceiling, and an integer program that picks which at-risk customers to call with which retention offer." />
+  <meta property="og:title" content="Smart Telecom Command Center" />
+  <meta property="og:description" content="Pricing and retention optimisation on 7,043 telecom customers: what to charge, and who to call." />
+  <meta property="og:image" content="media/demo-poster.jpg" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <script>
+    // Apply the saved theme before the first paint, so a dark page never flashes white.
+    try { var t = localStorage.getItem('theme'); var d = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.classList.toggle('dark', d); document.documentElement.style.colorScheme = d ? 'dark' : 'light' } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="assets/site.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <canvas id="ambient" aria-hidden="true"></canvas>
+
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Smart Telecom Command Center, top of page">
+        <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" id="logo"></svg>
+        <span><small>Smart Telecom</small><b>Command Center</b></span>
+      </a>
+      <nav class="links" aria-label="Sections">
+        <a href="#demo">Demo</a><a href="#how">How it works</a><a href="#screens">Screens</a><a href="#results">Results</a><a href="#honesty">Limits</a><a href="#stack">Built with</a>
+      </nav>
+      <div class="right">
+      <nav class="pagetabs" aria-label="Pages"><a href="index.html" aria-current="page">Project</a><a href="data.html">Your data</a></nav>
+      <div class="toggle" role="group" aria-label="Colour theme">
+        <button type="button" data-theme="light" title="Light theme" aria-label="Light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+        <button type="button" data-theme="system" title="System theme" aria-label="System"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
+        <button type="button" data-theme="dark" title="Dark theme" aria-label="Dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section id="top" data-tone="indigo">
+      <div class="wrap">
+        <p class="eyebrow">Operations Research project</p>
+        <h1>What to charge, and who to call.</h1>
+        <p class="lead">Two optimisation engines on IBM's Telco churn data (7,043 customers). A nonlinear program sets the prices of ten
+          services without letting churn rise; an integer program picks which at-risk customers to call with which of six retention
+          offers. A sweep then shows how retention spending frees room to raise prices.</p>
+        <div class="btns">
+          <a class="btn primary" href="#demo">Watch the 40-second demo</a>
+          <a class="btn ghost" id="live" href="#" hidden target="_blank" rel="noopener">Try it live</a>
+          <span class="faint">Source code in a private repository, available on request.</span>
+        </div>
+        <div class="grid g4" style="margin-top: 40px">
+          <div class="card kpi reveal"><div class="label">Customers</div><div class="value">7,043</div><div class="note">26.5% left during their recorded tenure</div></div>
+          <div class="card kpi reveal"><div class="label">Re-pricing</div><div class="value tone-indigo">+7.6%</div><div class="note">modelled lifetime profit, churn held at today's level</div></div>
+          <div class="card kpi reveal"><div class="label">Retention campaign</div><div class="value tone-emerald">$182,949</div><div class="note">expected value of 901 calls at 30% acceptance</div></div>
+          <div class="card kpi reveal"><div class="label">Verification</div><div class="value tone-amber">76</div><div class="note">automated checks re-derive every number from the raw file</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" data-tone="indigo">
+      <div class="wrap">
+        <p class="eyebrow">Demo</p>
+        <h2>The app, end to end</h2>
+        <p class="muted">Engine 1 and its sensitivity check, Engine 2 and its robustness check, the coupling sweep, then light mode. Recorded from the running app.</p>
+        <div class="video reveal"><video controls muted playsinline preload="metadata" poster="media/demo-poster.jpg" aria-label="Demo of the Smart Telecom Command Center"><source src="media/demo.mp4" type="video/mp4" /></video></div>
+      </div>
+    </section>
+
+    <section id="how" data-tone="emerald">
+      <div class="wrap">
+        <p class="eyebrow">How it works</p>
+        <h2>Two engines and the link between them</h2>
+        <div class="grid g3" style="margin-top: 24px">
+          <div class="card reveal"><span class="tag">Engine 1 · nonlinear program</span><h3>Price optimizer</h3>
+            <p class="muted">Sets one price for each of ten services to maximise customer lifetime profit, where, in the model, each customer's
+              monthly churn risk rises with their bill.</p>
+            <ul class="ticks"><li>Each price within ±25%; no bill moves more than 15%</li><li>Fibre stays $10 above DSL</li><li>Average churn may not rise above today's</li><li>SciPy SLSQP from 8 starting points; all agree</li></ul></div>
+          <div class="card reveal"><span class="tag">Engine 2 · binary integer program</span><h3>Retention optimizer</h3>
+            <p class="muted">For each of 1,651 customers with a monthly churn risk of 3% or more, at most one of six offers: contracts, free
+              services, an autopay switch.</p>
+            <ul class="ticks"><li>9,124 eligible customer-offer pairs</li><li>Budget, agent hours and a cap per offer</li><li>SciPy milp (HiGHS); within 0.01% of the LP bound</li><li>Beats the best of three greedy rankings by 5.16%</li></ul></div>
+          <div class="card reveal"><span class="tag">Coupling</span><h3>Retention buys pricing room</h3>
+            <p class="muted">Calling at-risk customers lowers their churn, which leaves room under Engine 1's churn ceiling. The sweep runs
+              Engine 2 at each budget, then Engine 1 on the lower churn.</p>
+            <ul class="ticks"><li>Budgets from $0 to $90,000</li><li>Net gain after retention spend</li><li>Runs as a background job with progress</li></ul></div>
+        </div>
+        <p class="faint" style="margin-top: 16px">Churn risk comes from a piecewise-exponential hazard model (Poisson GLM on 227,990 customer-months).
+          Prices were recovered from the bills by least squares (R² 0.9988).</p>
+      </div>
+    </section>
+
+    <section id="screens" data-tone="emerald">
+      <div class="wrap">
+        <p class="eyebrow">Screens</p>
+        <h2>Five pages</h2>
+        <p class="muted">Shown in the site's current theme; use the switch at the top to see the other.</p>
+        <div class="tabs" role="tablist" aria-label="App pages"></div>
+        <div class="shot reveal" role="tabpanel" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="results" data-tone="amber">
+      <div class="wrap">
+        <p class="eyebrow">Results at the default settings</p>
+        <h2>What the engines find</h2>
+        <div class="grid g2" style="margin-top: 24px">
+          <div class="card reveal"><h3>Prices</h3>
+            <p class="muted">Add-ons rise to their +25% bound, the phone line 12.5%, and fibre comes <em>down</em> 17.9%: that cut is what the
+              churn ceiling requires. Without the ceiling every price simply rises 15%. Revenue +3.5%, modelled lifetime profit +7.6%.</p>
+            <p class="muted">The pattern is identical for price sensitivity anywhere from 0.4 to 1.5; only the size of the fibre cut moves
+              (−17.6% to −18.3%). Each extra 1% of churn the business would accept is worth $164,816.</p></div>
+          <div class="card reveal"><h3>Who to call</h3>
+            <p class="muted">$30,000, 500 agent hours, at most 350 customers per offer: 901 customers called (350 autopay, 349 one-year,
+              198 two-year, 4 online security) for an expected $182,949.</p>
+            <p class="muted">Re-solved with contract effects cut to half or a quarter, or acceptance at 15% or 50%: about 80-95% of the same
+              customers are still called. <em>Which</em> offer they get is less stable, so the call list is the firm output.</p></div>
+        </div>
+        <div class="card reveal" style="margin-top: 16px"><h3>Retention spend vs pricing room</h3>
+          <table aria-label="Coupling sweep">
+            <thead><tr><th>Retention budget</th><th class="r">Offer value</th><th class="r">Net gain</th><th class="r">Fibre price</th></tr></thead>
+            <tbody>
+              <tr><td>$0</td><td class="r">$0</td><td class="r"><b>$1.29M</b></td><td class="r">−17.9%</td></tr>
+              <tr><td>$15,000</td><td class="r">$96,719</td><td class="r"><b>$2.32M</b></td><td class="r">+0.4%</td></tr>
+              <tr><td>$30,000</td><td class="r">$182,949</td><td class="r"><b>$3.15M</b></td><td class="r">+15.0%</td></tr>
+              <tr><td>$60,000</td><td class="r">$322,279</td><td class="r"><b>$3.28M</b></td><td class="r">+15.0%</td></tr>
+              <tr><td>$90,000</td><td class="r">$372,420</td><td class="r"><b>$3.30M</b></td><td class="r">+15.0%</td></tr>
+            </tbody>
+          </table>
+          <p class="faint" style="margin-top: 12px">Net gain is modelled lifetime profit after retention spend, against today's $17.01M. Most of
+            the gain comes from the first $30,000; from there every price is at the 15% limit and extra spend only adds offer value.</p></div>
+      </div>
+    </section>
+
+    <section id="honesty" data-tone="rose">
+      <div class="wrap">
+        <p class="eyebrow">Limits</p>
+        <h2>What this work does not claim</h2>
+        <ul class="no muted">
+          <li><b>No measured price sensitivity.</b> No price ever changed in the data, so how customers react to price is a scenario input,
+            tested from 0.4 to 1.5, not an estimate.</li>
+          <li><b>No measured offer effects.</b> Customers on two-year contracts churn far less, but they chose those contracts. The model's
+            ratios are associations, so the app re-solves with them cut to half and a quarter.</li>
+          <li><b>Expected values, not forecasts.</b> $182,949 assumes 30% of customers accept (a literature prior) and that an offer's effect
+            lasts its term.</li>
+          <li><b>The churn ceiling drives the price answer,</b> not the shape of the profit curve.</li>
+          <li><b>Greedy is not as good.</b> Ranking customers by score is 4-6% worse than solving the integer program.</li>
+        </ul>
+        <p class="faint">Six figures in an earlier version of this project's deck and report were contradicted by the data (for example "75% of
+          month-to-month customers left": the data says 42.7%). The automated checks keep those as visible failures.</p>
+      </div>
+    </section>
+
+    <section id="stack" data-tone="indigo">
+      <div class="wrap">
+        <p class="eyebrow">Built with</p>
+        <h2>Stack and testing</h2>
+        <div class="grid g3" style="margin-top: 24px">
+          <div class="card reveal"><h3>Modelling</h3><ul class="ticks"><li>Python: NumPy, pandas, scikit-learn</li><li>SciPy SLSQP (nonlinear) and milp / HiGHS (integer)</li><li>76 checks re-derive every number from the raw CSV</li></ul></div>
+          <div class="card reveal"><h3>App</h3><ul class="ticks"><li>Node.js API with no npm dependencies</li><li>Two long-lived Python workers; slow solves run as cancellable background jobs</li><li>React 19, Tailwind CSS 4, Vite 8; light and dark themes</li></ul></div>
+          <div class="card reveal"><h3>Testing</h3><ul class="ticks"><li>API test against reference numbers</li><li>Browser test (Playwright) in Chromium and WebKit</li><li>Every test on Windows in GitHub Actions</li></ul></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">Smart Telecom Command Center · Operations Research · Data: IBM Telco Customer Churn sample dataset (7,043 customers).</div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+  <script>
+    // ---- Live app link: set LIVE_URL once the app is hosted (option 2); the button stays hidden until then.
+    const LIVE_URL = '';
+    if (LIVE_URL) { const a = document.getElementById('live'); a.href = LIVE_URL; a.hidden = false; }
+
+    // ---- Screens gallery
+    (() => {
+      const pages = [['01-overview', 'Overview', 'The customer base, the recovered price list, churn by contract.'],
+        ['02-pricing', 'Pricing', 'Engine 1: the optimal price list, what limits each price, and the sensitivity check.'],
+        ['03-retention', 'Retention', 'Engine 2: value preserved, the offer mix, the robustness check, and the call list.'],
+        ['04-coupling', 'Coupling', 'Net gain against retention budget, solved as a background job.'],
+        ['05-checks', 'Data & checks', 'Verification status and the assumptions behind every number.']];
+      const tabs = document.querySelector('.tabs'), panel = document.querySelector('.shot');
+      const show = (i) => {
+        const [f, name, what] = pages[i];
+        tabs.querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
+        panel.innerHTML = `<img class="only-light" src="media/${f}-light.jpg" alt="${name} page, light theme: ${what}" loading="lazy" width="1600">`
+          + `<img class="only-dark" src="media/${f}-dark.jpg" alt="${name} page, dark theme: ${what}" loading="lazy" width="1600">`;
+      };
+      pages.forEach(([, name], i) => { const b = document.createElement('button'); b.type = 'button'; b.role = 'tab'; b.textContent = name; b.onclick = () => show(i); tabs.append(b) });
+      show(1);
+    })();
+  </script>
+</body>
+</html>
