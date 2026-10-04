@@ -53,6 +53,8 @@
           <a class="btn ghost" id="live" href="#" hidden target="_blank" rel="noopener">Try it live</a>
           <span class="faint">Source code in a private repository, available on request.</span>
         </div>
+        <p class="faint" id="live-note" hidden style="margin: 12px 0 0">The live app runs on a free server: the first visit can take about 2 minutes
+          to wake it, and each solve takes longer than on a laptop, up to a couple of minutes. The demo video shows normal speed.</p>
         <div class="grid g4" style="margin-top: 40px">
           <div class="card kpi reveal"><div class="label">Customers</div><div class="value">7,043</div><div class="note">26.5% left during their recorded tenure</div></div>
           <div class="card kpi reveal"><div class="label">Re-pricing</div><div class="value tone-indigo">+7.6%</div><div class="note">modelled lifetime profit, churn held at today's level</div></div>
@@ -175,8 +177,8 @@
   <script src="assets/site.js"></script>
   <script>
     // ---- Live app link: set LIVE_URL once the app is hosted (option 2); the button stays hidden until then.
-    const LIVE_URL = '';
-    if (LIVE_URL) { const a = document.getElementById('live'); a.href = LIVE_URL; a.hidden = false; }
+    const LIVE_URL = 'https://smart-telecom-command-center.onrender.com';
+    if (LIVE_URL) { const a = document.getElementById('live'); a.href = LIVE_URL; a.hidden = false; document.getElementById('live-note').hidden = false; }
 
     // ---- Screens gallery
     (() => {
